@@ -19,10 +19,11 @@
       - [1.1.3 PHP](#113-php)
       - [1.1.4 MySQL](#114-mysql)
       - [1.1.5 XDebug](#115-xdebug)
-      - [1.1.6 DNS](#116-dns)
-      - [1.1.7 SFTP](#117-sftp)
-      - [1.1.8 Apache Tomcat](#118-apache-tomcat)
-      - [1.1.9 LDAP](#119-ldap)
+      - [1.1.6 Servidor web seguro (HTTPS)](#116-servidor-web-seguro-https)
+      - [1.1.7 DNS](#117-dns)
+      - [1.1.8 SFTP](#118-sftp)
+      - [1.1.9 Apache Tomcat](#119-apache-tomcat)
+      - [1.1.10 LDAP](#1110-ldap)
     - [1.2 Windows 11](#12-windows-11)
       - [1.2.1 **Configuración inicial**](#121-configuración-inicial)
         - [**Nombre y configuración de red**](#nombre-y-configuración-de-red)
@@ -34,10 +35,12 @@
   - [2. GitHub](#2-github)
   - [3.Entorno de Explotación](#3entorno-de-explotación)
 
-|  DAW/DWES Tema2 |
+|  CDGS DESARROLLO  DE APLICACIONES WEB |
 |:-----------:|
 |![Alt](images/portada.jpg)|
-| INSTALACIÓN, CONFIGURACIÓN Y DOCUMENTACIÓN DE ENTORNO DE DESARROLLO Y DEL ENTORNO DE EXPLOTACIÓN |
+| DESPLIEGUE DE APLCIACIONES WEB
+| CYBERSEGURIDAD
+| DAWES Tema 2. INSTALACIÓN, CONFIGURACIÓN Y DOCUMENTACIÓN DE ENTORNO DE DESARROLLO Y DEL ENTORNO DE EXPLOTACIÓN |
 
 ## 1. Entorno de Desarrollo
 
@@ -106,10 +109,11 @@ como activar cortafuegos
 #### 1.1.3 PHP
 #### 1.1.4 MySQL
 #### 1.1.5 XDebug
-#### 1.1.6 DNS
-#### 1.1.7 SFTP
-#### 1.1.8 Apache Tomcat
-#### 1.1.9 LDAP
+#### 1.1.6 Servidor web seguro (HTTPS)
+#### 1.1.7 DNS
+#### 1.1.8 SFTP
+#### 1.1.9 Apache Tomcat
+#### 1.1.10 LDAP
 
 ### 1.2 Windows 11
 #### 1.2.1 **Configuración inicial**
@@ -128,4 +132,4 @@ como activar cortafuegos
 > **Nombre y Apellidos**  
 > Curso: 2025/2026  
 > 2º Curso CFGS Desarrollo de Aplicaciones Web  
-> Despliegue de aplicaciones web
+
