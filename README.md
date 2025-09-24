@@ -1,6 +1,13 @@
 
 # CFGS Desarrollo de Aplicaciones Web
 
+|  CFGS DESARROLLO  DE APLICACIONES WEB |
+|:-----------:|
+|![Alt](images/portada.jpg)|
+| DESPLIEGUE DE APLCIACIONES WEB
+| CYBERSEGURIDAD
+| DAWES Tema 2. INSTALACIÓN, CONFIGURACIÓN Y DOCUMENTACIÓN DE ENTORNO DE DESARROLLO Y DEL ENTORNO DE EXPLOTACIÓN |
+
 
 - [CFGS Desarrollo de Aplicaciones Web](#cfgs-desarrollo-de-aplicaciones-web)
   - [1. Entorno de Desarrollo](#1-entorno-de-desarrollo)
@@ -34,13 +41,6 @@
       - [1.2.5 **Visual Studio Code**](#125-visual-studio-code)
   - [2. GitHub](#2-github)
   - [3.Entorno de Explotación](#3entorno-de-explotación)
-
-|  CDGS DESARROLLO  DE APLICACIONES WEB |
-|:-----------:|
-|![Alt](images/portada.jpg)|
-| DESPLIEGUE DE APLCIACIONES WEB
-| CYBERSEGURIDAD
-| DAWES Tema 2. INSTALACIÓN, CONFIGURACIÓN Y DOCUMENTACIÓN DE ENTORNO DE DESARROLLO Y DEL ENTORNO DE EXPLOTACIÓN |
 
 ## 1. Entorno de Desarrollo
 
