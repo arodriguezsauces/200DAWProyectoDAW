@@ -4,7 +4,7 @@
 |  CFGS DESARROLLO  DE APLICACIONES WEB |
 |:-----------:|
 |![Alt](images/portada.jpg)|
-| DESPLIEGUE DE APLCIACIONES WEB
+| DESPLIEGUE DE APLICACIONES WEB
 | CYBERSEGURIDAD
 | DAWES Tema 2. INSTALACIÓN, CONFIGURACIÓN Y DOCUMENTACIÓN DE ENTORNO DE DESARROLLO Y DEL ENTORNO DE EXPLOTACIÓN |
 
@@ -63,19 +63,20 @@ Este documento es una guía detallada del proceso de instalación y configuraci�
 Editar el fichero de configuración del interface de red  **/etc/netplan**,
 
 ```bash
-
-# This is the network config written by 'subiquity'
 network:
   ethernets:
     enp0s3:
       addresses:
-       - 192.168.1.100/24
-      gateway4: 192.168.1.1
+       - xx.xx.xx.xx/xx
       nameservers:
          addresses:
-         - 8.8.8.8
-         search: [tunombre.local]
+         - xx.xx.xx.xx
+      routes:
+          - to: default
+             via: xx.xx.xx.xx
+         search: [dominio]
   version: 2
+
 ````
 
 ##### **Actualizar el sistema**
