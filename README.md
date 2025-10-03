@@ -50,7 +50,9 @@ Este documento es una guía detallada del proceso de instalación y configuraci�
 
 #### 1.1.1 **Configuración inicial**
 
-##### Nombre y configuraicón de red
+##### Nombre  del equipo 
+
+##### Configuración de red
 
 > **Nombre de la máquina**: daw-used\
 > **Memoria RAM**: 2G\
@@ -78,6 +80,9 @@ network:
   version: 2
 
 ````
+Aplicar cambios de configuración
+Comprobación y conectividad
+
 
 ##### **Actualizar el sistema**
 
@@ -104,8 +109,19 @@ como activar cortafuegos
 
 ##### Instalación
 ##### Verficación del servicio
+##### Estructura de directorios y principales archivos
+##### Activar .htaccess
+##### Directivas
+
+- DirectoryIndex
+- Options Indexes
+- ErrorLog
+- CustomLog
+  
+
 ##### Virtual Hosts
 ##### Permisos y usuarios
+##### Comandos 
 
 #### 1.1.3 PHP
 #### 1.1.4 MySQL
