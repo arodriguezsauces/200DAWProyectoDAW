@@ -189,7 +189,7 @@ graph TD
 ```
 
 ```bash
-sudo a2enmod proxy_fcfgi setenvif
+sudo a2enmod proxy_fcgi setenvif
 ```
 
 **Activarlo para cada virtualhost**
