@@ -22,7 +22,7 @@
       - [1.1.2 Instalación del servidor web](#112-instalación-del-servidor-web)
         - [Instalación](#instalación)
         - [Verficación del servicio](#verficación-del-servicio)
-        - [Estructura de directorios y principales archivos](#estructura-de-directorios-y-principales-archivos)
+        - [Estructura de directorios y p](#estructura-de-directorios-y-p)
         - [Activar .htaccess](#activar-htaccess)
         - [Directivas](#directivas)
         - [Virtual Hosts](#virtual-hosts)
@@ -32,6 +32,8 @@
   - [**Instalación**](#instalación-1)
   - [Ficheros de configuración de PHP para php-fpm:](#ficheros-de-configuración-de-php-para-php-fpm)
   - [**Configuración de Apache2 con PHP-FPM**](#configuración-de-apache2-con-php-fpm)
+  - [**Activarlo para cada virtualhost**](#activarlo-para-cada-virtualhost)
+  - [**Activarlo para todos los virtualhost**](#activarlo-para-todos-los-virtualhost)
   - [**Comprobación de funcionamiento PHP-FPM**](#comprobación-de-funcionamiento-php-fpm)
       - [1.1.4 MySQL](#114-mysql)
       - [1.1.5 XDebug](#115-xdebug)
@@ -118,8 +120,12 @@ como activar cortafuegos
 
 ##### Instalación
 ##### Verficación del servicio
-##### Estructura de directorios y principales archivos
+##### Estructura de directorios y p
+rincipales archivos
 ##### Activar .htaccess
+
+https://apache2.com/2.2.2.en/howto/htaccess.html
+
 ##### Directivas
 
 - DirectoryIndex
@@ -135,6 +141,8 @@ como activar cortafuegos
 #### 1.1.3 Ejecución PHP con PHP-FPM
 FPM (FastCGI Process Manager) es un servidor de aplicaciones PHP que se encarga de interpretar código PHP.
 
+ https://www.php.net/manual/es/install.fpm.php
+
 **Instalación**
 ----
 
@@ -148,20 +156,20 @@ Ficheros de configuración de PHP para php-fpm:
 
 * **/etc/php/8.3/fpm/conf.d**: Módulos instalados en esta configuración de php (enlaces simbólicos a /etc/php/8.3/mods-available)
 *  **/etc/php/8.3/fpm/php-fpm.conf** : Configuración general de php-fpm
-*  **/etc/php/8.3/fpm/php.ini** : Configuraicón de php para este escenario
+*  **/etc/php/8.3/fpm/php.ini** : Configuración de php para este escenario
 *  **/etc/php/8.3/fpm/pool.d** : Directorio con distintos pool de configuración. Cada aplicación puede tener una configuración distinta (procesos distintos) de php-fpm.
   
 Por defecto tenemos un pool cuya configuración la encontramos en **/etc/php/8.3/fpm/pool.d/ www.conf**, en este fichero podemos configurar parámetros, los más importantes son:
 
-* **[www]**: -es el nombre del pool, si tenemos varios, cada uno tiene que tener un nombre.
-* ** user y group** : Usuario y grupo con el que va a ejecutar los procesos
-* **listen**: Se indica el socket unix o el socket TCP donde se van a escuchar los procesos:
-  * Por defecto, escucha por un socket unix: listen=/run/php/php8.3-fpm.sock
-  * Si queremos que escuche por TCO; listen=127.0.0.1:9000
+* `[www]`: -es el nombre del pool, si tenemos varios, cada uno tiene que tener un nombre.
+* `user` y `group` : Usuario y grupo con el que va a ejecutar los procesos
+* `listen` Se indica el socket unix o el socket TCP donde se van a escuchar los procesos:
+  * Por defecto, escucha por un socket unix: `listen=/run/php/php8.3-fpm.sock`
+  * Si queremos que escuche por TCP: `listen=127.0.0.1:9000`
 * Directivas de procesamiento, gestión de procesos:
-  * **pm**: Por defecto es igual a dynamic (el número de procesos se crean y se destruyen de forma dinámica). Otros valores: static o ondemand.
-  * Otras directivas: **pm.max_children** (número máxio de procesos hijo que pueden ser creados al mismo tiempo para manejar solicitudes), **pm.start_servers** (cuantos procesos PHP-FPM se lanzararón al inicio de forma automática),**pm.min_spare_servers**( número mínimo de procesos del servidor inactivos para manejar nuevas solicitudes),...
-  * **pm.status_path=/status**: No es necesario, vamos a activar la URL de status para comprobar el estado del proceso.
+  * `pm` Por defecto es igual a dynamic (el número de procesos se crean y se destruyen de forma dinámica). Otros valores: static o ondemand.
+  * Otras directivas: `pm.max_children` (número máxio de procesos hijo que pueden ser creados al mismo tiempo para manejar solicitudes), `pm.start_servers` (cuantos procesos PHP-FPM se lanzararón al inicio de forma automática),`pm.min_spare_servers`( número mínimo de procesos del servidor inactivos para manejar nuevas solicitudes),...
+  * `pm.status_path=/status` No es necesario, vamos a activar la URL de status para comprobar el estado del proceso.
 
 Reiniciar el servicio:
 ```bash
@@ -185,12 +193,16 @@ sudo a2enmod proxy_fcfgi setenvif
 ```
 
 **Activarlo para cada virtualhost**
+--
 
 Un **socket** es un "canal de comunicación* entre dos procesos, en nuestro caso es entre el programa Apache con PHP-FPM.
 
+**MÉTODO 1**
+
 Se pueden usar dos tipos de SOCKET:
 
-* Si php-fpm está escuchando en un SOCKET TCP
+1. Si `php-fpm` está escuchando en un **SOCKET TCP**
+ ---
 
 Usa una dirección IP y un puerto para comunicarse, por lo tanto usa el protocolo TCP/IP (comunicación en red) y puede conectarse desde otra máquina si el puerto está abierto.
   
@@ -198,15 +210,16 @@ Usa una dirección IP y un puerto para comunicarse, por lo tanto usa el protocol
   ProxyPassMatch ^/(.*\.php)$ fcgi://127.0.0.1:9000/var/www/html/$1
 ```
 
-- La directiva `ProxyPassMatch`Indica a Apache que use un sistema proxy con una expresión regular para indicar qué peticiones redirigir.
+- La directiva `ProxyPassMatch` indica a Apache que use un sistema proxy con una expresión regular para indicar qué peticiones redirigir.
 
 - `^/(.*\.php)` Es la expresión regular que cpatura cualquier URL que termina en .php y el contenido del parentesis se guarda en $1. Por ejemplo: /index.php, /blog/post.php,etc
 -  `fcgi://127.0.0.1:9000/var/www/html/$1` define el destino FastCGI donde enviará las peticiones:
-   -  fcgi:// usa el protocolo FastCGI
-   -  127.0.0.1:9000 dirección y puerto donde PHP-FPM está escuchando
-   -  /var/www/html/$1 ruta real del archivo PHP en el servidor (Apache sustituye $1 por el nombre del archivo)
+-  `fcgi://` usa el protocolo FastCGI
+-  `127.0.0.1:9000` dirección y puerto donde PHP-FPM está escuchando
+-  `/var/www/html/$1` ruta real del archivo PHP en el servidor (Apache sustituye $1 por el nombre del archivo)
 
-* Si php-fpm está escuchando en un  SOCKET UNIX (local)
+2. Si`php-fpm` está escuchando en un  **SOCKET UNIX (local)**
+ ---
   
 Existe un **archivo especial** en `/run/php/php8.3-fpm.sock`que actua como punto de comunicación dentro de la propia máquina en sistemas UNIX/Linux y no usa puertos ni direcciones IP.
 
@@ -214,9 +227,12 @@ Existe un **archivo especial** en `/run/php/php8.3-fpm.sock`que actua como punto
   ProxyPassMatch ^/(.*\.php)$ unix:/run/php/php8.3-fpm.sock|fcgi://127.0.0.1/var/www/html
 ```
 
+**MÉTODO 2**
 Otra forma de hacerlo:
 
-* Si php-fpm está escuchando en un socket TCP
+1. Si `php-fpm` está escuchando en un **socket TCP**
+---
+
   La directiva `SetHandler` indica qué manejador debe usarse para procesar las solicitudes de ciertos archivos.
   En este caso los archivos PHP, los envía al proxy FastCGI
   
@@ -226,7 +242,8 @@ Otra forma de hacerlo:
   </FilesMatch>
 ```
 
-* Si php-fpm está escuchado en un socket UNIX
+2. Si `php-fpm` está escuchado en un **socket UNIX**
+---
 
 ```bash
   <FilesMatch "\.php$">
@@ -235,6 +252,8 @@ Otra forma de hacerlo:
 ```
 
 **Activarlo para todos los virtualhost**
+---
+
 El fichero de configuraicón `php8.3-fpm`en el directorio `/etc/apache2/conf-available`, por defecto funciona cuando php-fpm está escuchando en un socket UNIX:
 
 ```bash
@@ -294,6 +313,13 @@ listen = 127.0.0.1:9000
 ```
 
 Está escuchando por TCP/IP en la dirección local
+
+Listar los procesos asociados a PHP-PFM
+``` bash
+   ss -xlnp |grep php
+```
+
+![Resultado del comando ss -xlnp](images/ss1.png)
 
 #### 1.1.4 MySQL
 #### 1.1.5 XDebug
