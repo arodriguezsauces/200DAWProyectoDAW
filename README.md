@@ -15,26 +15,26 @@
       - [1.1.1 **Configuración inicial**](#111-configuración-inicial)
         - [Nombre  del equipo](#nombre--del-equipo)
         - [Configuración de red](#configuración-de-red)
-        - [**Actualizar el sistema**](#actualizar-el-sistema)
-        - [**Configuración fecha y hora**](#configuración-fecha-y-hora)
-        - [**Cuentas administradoras**](#cuentas-administradoras)
-        - [**Habilitar cortafuegos**](#habilitar-cortafuegos)
+        - [Actualizar el sistema](#actualizar-el-sistema)
+        - [Configuración fecha y hora](#configuración-fecha-y-hora)
+        - [Cuentas administradoras](#cuentas-administradoras)
+        - [Habilitar cortafuegos](#habilitar-cortafuegos)
       - [1.1.2 Instalación del servidor web](#112-instalación-del-servidor-web)
         - [Instalación](#instalación)
         - [Verficación del servicio](#verficación-del-servicio)
-        - [Estructura de directorios y p](#estructura-de-directorios-y-p)
+        - [Estructura de directorios y principales archivos](#estructura-de-directorios-y-principales-archivos)
         - [Activar .htaccess](#activar-htaccess)
         - [Directivas](#directivas)
         - [Virtual Hosts](#virtual-hosts)
         - [Permisos y usuarios](#permisos-y-usuarios)
         - [Comandos](#comandos)
-      - [1.1.3 Ejecución PHP con PHP-FPM](#113-ejecución-php-con-php-fpm)
-  - [**Instalación**](#instalación-1)
-  - [Ficheros de configuración de PHP para php-fpm:](#ficheros-de-configuración-de-php-para-php-fpm)
-  - [**Configuración de Apache2 con PHP-FPM**](#configuración-de-apache2-con-php-fpm)
-  - [**Activarlo para cada virtualhost**](#activarlo-para-cada-virtualhost)
-  - [**Activarlo para todos los virtualhost**](#activarlo-para-todos-los-virtualhost)
-  - [**Comprobación de funcionamiento PHP-FPM**](#comprobación-de-funcionamiento-php-fpm)
+      - [1.1.3 Servidor de PHP con PHP-FPM](#113-servidor-de-php-con-php-fpm)
+          - [Instalación](#instalación-1)
+          - [Ficheros de configuración de PHP para php-fpm:](#ficheros-de-configuración-de-php-para-php-fpm)
+          - [Configuración de Apache2 con PHP-FPM](#configuración-de-apache2-con-php-fpm)
+          - [Activarlo para cada virtualhost](#activarlo-para-cada-virtualhost)
+          - [Activarlo para todos los virtualhost](#activarlo-para-todos-los-virtualhost)
+          - [Comprobación de funcionamiento PHP-FPM](#comprobación-de-funcionamiento-php-fpm)
       - [1.1.4 MySQL](#114-mysql)
       - [1.1.5 XDebug](#115-xdebug)
       - [1.1.6 Servidor web seguro (HTTPS)](#116-servidor-web-seguro-https)
@@ -94,34 +94,35 @@ network:
 Aplicar cambios de configuración
 Comprobación y conectividad
 
-
-##### **Actualizar el sistema**
+##### Actualizar el sistema
 
 ```bash
 sudo apt update
 sudo apt upgrade
 ```
 
-##### **Configuración fecha y hora**
+##### Configuración fecha y hora
 
 [Establecer fecha, hora y zona horaria](https://somebooks.es/establecer-la-fecha-hora-y-zona-horaria-en-la-terminal-de-ubuntu-20-04-lts/ "Cambiar fecha y hora")
 
-##### **Cuentas administradoras**
+##### Cuentas administradoras
 
 > - [X] root(inicio)
 > - [ ] miadmin/paso
 > - [ ] miadmin2/paso
 
-##### **Habilitar cortafuegos**
+##### Habilitar cortafuegos
 
 como activar cortafuegos
 
 #### 1.1.2 Instalación del servidor web
 
 ##### Instalación
+
 ##### Verficación del servicio
-##### Estructura de directorios y p
-rincipales archivos
+
+##### Estructura de directorios y principales archivos
+
 ##### Activar .htaccess
 
 https://apache2.com/2.2.2.en/howto/htaccess.html
@@ -135,22 +136,26 @@ https://apache2.com/2.2.2.en/howto/htaccess.html
   
 
 ##### Virtual Hosts
+
 ##### Permisos y usuarios
+
 ##### Comandos 
 
-#### 1.1.3 Ejecución PHP con PHP-FPM
+#### 1.1.3 Servidor de PHP con PHP-FPM
+
 FPM (FastCGI Process Manager) es un servidor de aplicaciones PHP que se encarga de interpretar código PHP.
 
  https://www.php.net/manual/es/install.fpm.php
-
-**Instalación**
+ 
+###### Instalación
 ----
+
 
 ```bash
 sudo apt install php8.3-fpm php8.3
 ```
 
-Ficheros de configuración de PHP para php-fpm:
+###### Ficheros de configuración de PHP para php-fpm:
 ---
 
 
@@ -176,7 +181,7 @@ Reiniciar el servicio:
 sudo systemctl restart php8.3-fpm
 ```
 
-**Configuración de Apache2 con PHP-FPM**
+###### Configuración de Apache2 con PHP-FPM
 ---
 
 Apache2 va a funcionar como proxy inverso(reverse proxy) para las peticiones de los recursos php. cuando solicitamos un fichero php, apache2 le pasará la petición a php-fpm para que interprete el php y luego devuelva la respuesta al servidor web.
@@ -192,8 +197,8 @@ graph TD
 sudo a2enmod proxy_fcgi setenvif
 ```
 
-**Activarlo para cada virtualhost**
---
+###### Activarlo para cada virtualhost
+---
 
 Un **socket** es un "canal de comunicación* entre dos procesos, en nuestro caso es entre el programa Apache con PHP-FPM.
 
@@ -251,7 +256,7 @@ Otra forma de hacerlo:
   </FilesMatch>
 ```
 
-**Activarlo para todos los virtualhost**
+###### Activarlo para todos los virtualhost
 ---
 
 El fichero de configuraicón `php8.3-fpm`en el directorio `/etc/apache2/conf-available`, por defecto funciona cuando php-fpm está escuchando en un socket UNIX:
@@ -290,7 +295,7 @@ Por último activamos (o comprobar que esta activado):
 sudo a2enconf php8.3-fpm
 ```
 
-**Comprobación de funcionamiento PHP-FPM**
+###### Comprobación de funcionamiento PHP-FPM
 ---
 
 PHP-FPM puede escuchar por socket UNIX o TCP/IP (host:puerto). Revisar cada "pool" en Ubuntu en `/etc/php/8.3/fpm/pool.d/www.conf`
@@ -323,6 +328,7 @@ Listar los procesos asociados a PHP-PFM
 
 #### 1.1.4 MySQL
 #### 1.1.5 XDebug
+
 #### 1.1.6 Servidor web seguro (HTTPS)
 #### 1.1.7 DNS
 #### 1.1.8 SFTP
