@@ -3,7 +3,7 @@
 
 |  CFGS DESARROLLO  DE APLICACIONES WEB |
 |:-----------:|
-|![Alt](images/portada.jpg)|
+|![Logo del módulo DAW](http://marodriguezn.ieslossauces.es/images/portada.jpg)|
 | DESPLIEGUE DE APLICACIONES WEB
 | CYBERSEGURIDAD
 | DAWES Tema 2. INSTALACIÓN, CONFIGURACIÓN Y DOCUMENTACIÓN DE ENTORNO DE DESARROLLO Y DEL ENTORNO DE EXPLOTACIÓN |
