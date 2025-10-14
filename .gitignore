@@ -1,0 +1,94 @@
+# ==========================================
+# Git Ignore para proyectos PHP con NetBeans
+# ==========================================
+
+# Archivos y carpetas de NetBeans
+/nbproject/private/
+/nbproject/Makefile-*.mk
+/nbproject/Package-*.bash
+/nbproject/configurations.xml
+/nbproject/project.properties
+/nbproject/project.xml.backup
+
+# Si quieres ignorar TODO el directorio nbproject excepto el project.xml,
+# (útil cuando quieres compartir solo la configuración básica del proyecto)
+# descomenta las siguientes líneas:
+# /nbproject/*
+# !/nbproject/project.xml
+
+# ==========================================
+# Archivos del sistema operativo
+# ==========================================
+e
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+
+# ==========================================
+# Archivos de dependencias PHP
+# ==========================================
+
+# Composer
+/vendor/
+/composer.lock
+# (si quieres versionar composer.lock, coméntalo)
+
+# ==========================================
+# Archivos temporales, cachés y logs
+# ==========================================
+
+# Logs
+*.log
+
+# Cachés de PHP
+.cache/
+tmp/
+temp/
+*.tmp
+
+# Sesiones, uploads o archivos generados
+/session/
+uploads/
+.cache/
+*.bak
+
+# ==========================================
+# Configuración del entorno local
+# ==========================================
+
+# Archivos de entorno o configuración sensible
+.env
+.env.local
+.env.*.local
+
+# Configuración del IDE
+.idea/
+.vscode/
+*.sublime-workspace
+*.sublime-project
+
+# ==========================================
+# Cobertura de tests (PHPUnit, etc.)
+# ==========================================
+
+/coverage/
+/build/
+/reports/
+
+# ==========================================
+# Otros archivos no deseados
+# ==========================================
+
+# Archivos de respaldo y swap
+*.swp
+*.swo
+*.bak
+*.orig
+
+# ==========================================
+# Fin del .gitignore
+# ==========================================
+
