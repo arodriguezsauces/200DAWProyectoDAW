@@ -184,7 +184,7 @@ sudo systemctl restart php8.3-fpm
 ###### Configuración de Apache2 con PHP-FPM
 ---
 
-Apache2 va a funcionar como proxy inverso(reverse proxy) para las peticiones de los recursos php. cuando solicitamos un fichero php, apache2 le pasará la petición a php-fpm para que interprete el php y luego devuelva la respuesta al servidor web.
+Apache2 va a funcionar como proxy inverso(reverse proxy) para las peticiones de los recursos php. Cuando solicitamos un fichero php, apache2 le pasará la petición a php-fpm para que interprete el php y luego devuelva la respuesta al servidor web.
 
 ```mermaid
 graph TD
@@ -259,7 +259,7 @@ Otra forma de hacerlo:
 ###### Activarlo para todos los virtualhost
 ---
 
-El fichero de configuraicón `php8.3-fpm`en el directorio `/etc/apache2/conf-available`, por defecto funciona cuando php-fpm está escuchando en un socket UNIX:
+El fichero de configuración `php8.3-fpm`en el directorio `/etc/apache2/conf-available`, por defecto funciona cuando php-fpm está escuchando en un socket UNIX:
 
 ```bash
 <FilesMatch ".+\.ph(?:ar|p|tml)$">
@@ -328,6 +328,55 @@ Listar los procesos asociados a PHP-PFM
 
 #### 1.1.4 MySQL
 #### 1.1.5 XDebug
+Xdebug es una extensión (módulo) de PHP diseñada para ayudar en la depuración (debugging) y profiling (análisis de rendimiento) del código PHP.
+En otras palabras, es una herramienta que permite ver qué hace tu programa internamente mientras se ejecuta, paso a paso, y medir su rendimiento.
+Funciones principales
+Depurador paso a paso (debugging)
+
+* Permite pausar la ejecución del script en cualquier punto breakpoint
+* Puede inspeccionar variables, pilas de llamadas (call stack) y valores de expresiones
+* Se puede usar junto al IDE (VSCode, Netbeans, PhpStorm,etc)
+* Comunicación del IDE mediante el protocolo DBGp (puerto 9003)
+
+En primer lugar asegurate de que no está instalado
+
+```bash
+sudo php -v | grep xdebug
+```
+
+Si no aparece, instalálo:
+
+```bash
+sudo apte install php8.3-xdebug
+```
+
+Luego edita el fichero de configuración:
+
+```bash
+sudo nano /etc/php/8.3/fpm/conf.d/20-xdebug.ini
+```
+
+Y añade
+
+```bash
+
+xdebug.mode=develop,debug
+xdebug.start_with_request=yes
+xdebug.client_host=127.0.0.1
+xdebug.client_port=9003
+xdebug.log=/tmp/xdebug.log
+xdebug.log_level=7
+xdebug.idekey="netbeans-xdebug"
+xdebug.discover_client_host=1
+```
+
+Guarda y reinicia el servidor
+
+```bash
+sudo systemctl restart apache 2
+# o si usas php-fpm
+sudo systemctl restart php8.3-fpm
+```
 
 #### 1.1.6 Servidor web seguro (HTTPS)
 #### 1.1.7 DNS
