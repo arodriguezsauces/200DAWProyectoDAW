@@ -431,7 +431,7 @@ sudo php -v | grep xdebug
 Si no aparece, instalálo:
 
 ```bash
-sudo apte install php8.3-xdebug
+sudo apt install php8.3-xdebug
 ```
 
 Luego edita el fichero de configuración:
@@ -457,7 +457,7 @@ xdebug.discover_client_host=1
 Guarda y reinicia el servidor
 
 ```bash
-sudo systemctl restart apache 2
+sudo systemctl restart apache2
 # o si usas php-fpm
 sudo systemctl restart php8.3-fpm
 ```
