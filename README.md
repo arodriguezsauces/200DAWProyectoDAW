@@ -3,7 +3,7 @@
 
 |  CFGS DESARROLLO  DE APLICACIONES WEB |
 |:-----------:|
-|![Logo del módulo DAW](http://marodriguezn.ieslossauces.es/images/portada.jpg)|
+|![Logo del módulo DAW](images/portada.jpg)|
 | DESPLIEGUE DE APLICACIONES WEB
 | CYBERSEGURIDAD
 | DAWES Tema 2. INSTALACIÓN, CONFIGURACIÓN Y DOCUMENTACIÓN DE ENTORNO DE DESARROLLO Y DEL ENTORNO DE EXPLOTACIÓN |
@@ -19,6 +19,7 @@
         - [Configuración fecha y hora](#configuración-fecha-y-hora)
         - [Cuentas administradoras](#cuentas-administradoras)
         - [Habilitar cortafuegos](#habilitar-cortafuegos)
+      - [Sistema de configuración regional](#sistema-de-configuración-regional)
       - [1.1.2 Instalación del servidor web](#112-instalación-del-servidor-web)
         - [Instalación](#instalación)
         - [Verficación del servicio](#verficación-del-servicio)
@@ -34,16 +35,15 @@
           - [Configuración de Apache2 con PHP-FPM](#configuración-de-apache2-con-php-fpm)
           - [Activarlo para cada virtualhost](#activarlo-para-cada-virtualhost)
           - [Activarlo para todos los virtualhost](#activarlo-para-todos-los-virtualhost)
-          - [Comprobación de funcionamiento PHP-FPM](#comprobación-de-funcionamiento-php-fpm)
+          - [1.1.4 Comprobación de funcionamiento PHP-FPM](#114-comprobación-de-funcionamiento-php-fpm)
       - [Configuración de PHP en entornos de desarrollo y de explotación](#configuración-de-php-en-entornos-de-desarrollo-y-de-explotación)
-      - [1.1.4 MariaDB](#114-mariadb)
-      - [Modulos PHP](#modulos-php)
-      - [1.1.5 XDebug](#115-xdebug)
-      - [1.1.6 Servidor web seguro (HTTPS)](#116-servidor-web-seguro-https)
-      - [1.1.7 DNS](#117-dns)
-      - [1.1.8 SFTP](#118-sftp)
-      - [1.1.9 Apache Tomcat](#119-apache-tomcat)
-      - [1.1.10 LDAP](#1110-ldap)
+      - [1.1.5 MariaDB](#115-mariadb)
+      - [1.1.6 Modulos PHP](#116-modulos-php)
+      - [1.1.7 Servidor web seguro (HTTPS)](#117-servidor-web-seguro-https)
+      - [1.1.8 DNS](#118-dns)
+      - [1.1.9 SFTP](#119-sftp)
+      - [1.1.10 Apache Tomcat](#1110-apache-tomcat)
+      - [1.1.11 LDAP](#1111-ldap)
     - [1.2 Windows 11](#12-windows-11)
       - [1.2.1 **Configuración inicial**](#121-configuración-inicial)
         - [**Nombre y configuración de red**](#nombre-y-configuración-de-red)
@@ -116,6 +116,33 @@ sudo apt upgrade
 ##### Habilitar cortafuegos
 
 como activar cortafuegos
+#### Sistema de configuración regional
+`locale` define como se muestran y se procesan los datos dependietnes del idioma y la región
+
+En el fichero `/etc/default/locale` es el locale por defecto.
+Para verificar:
+```bash
+locale
+```
+Se puede instalar un nuevo locale que no aparece en la lista, puedes generarlo::
+```bash
+sudo locale-gen es.MX.UTF-8
+sudo locale-gen es_ES.UTF-8
+sudo update-locale
+```
+Y para verificarlo
+```bash
+locale -a
+```
+
+
+- PHP puede heredar el locale del sistema Ubuntu
+- Si usas php-intl, PHP tomará por defecto el definido en /etc/default/locale o en php.ini
+- Tambien se puede definir en tus scripts con: 
+ >setlocale(LC_ALL, 'es_MX.UTF-8'); <br>
+Locale::setDefault('es_MX');
+
+
 
 #### 1.1.2 Instalación del servidor web
 
@@ -135,6 +162,7 @@ https://apache2.com/2.2.2.en/howto/htaccess.html
 - Options Indexes
 - ErrorLog
 - CustomLog
+- ErrorDocument
   
 
 ##### Virtual Hosts
@@ -297,7 +325,7 @@ Por último activamos (o comprobar que esta activado):
 sudo a2enconf php8.3-fpm
 ```
 
-###### Comprobación de funcionamiento PHP-FPM
+###### 1.1.4 Comprobación de funcionamiento PHP-FPM
 ---
 
 PHP-FPM puede escuchar por socket UNIX o TCP/IP (host:puerto). Revisar cada "pool" en Ubuntu en `/etc/php/8.3/fpm/pool.d/www.conf`
@@ -379,7 +407,7 @@ Esta directiva permite que se muestren los errores que ocurren durante el inicio
 Registra errores en un archivo, permitiendo a los administradores revisarlos sin exponer detalles a los usuarios.
 
 
-#### 1.1.4 MariaDB
+#### 1.1.5 MariaDB
 > **MariaDB** es un **sistema de gestión de bases de datos relacional (RDBMS)**, muy similar a MySQL, permitiendo almacenar, organizar y acceder a información mediante el **lenguaje SQL (Structured Query Language)**.
 > Es una alternativa moderna y abierta a MySQL, muy usada en servidores web, aplicaciones empresariales y sistemas en la nube.
 >
@@ -519,7 +547,7 @@ Sigue las indicaciones para establecer la contraseña de root, eliminar usuarios
 * De nuevo preguntará si quieres eliminar la base de datos `test`, aquí indica de nuevo que Sí quieres borrar las base de datos de prueba.
 * Por último, preguntará si quieres recargar privilegios, aquí indica que `Sí`.
   
-#### Modulos PHP
+#### 1.1.6 Modulos PHP
 
 a) **php8.3-mysql**
 
@@ -560,9 +588,7 @@ Permite que PHP muestre información adaptada a la región e idioma, sin que ten
 |Normalización Unicode | Asegura que caracteres acentuados o especiales se comparen correctamente | útil para búsquedas y validaciones |
 
 
-
-
-#### 1.1.5 XDebug
+c) XDebug
 `Xdebug` es una extensión (módulo) de PHP diseñada para ayudar en la depuración (debugging) y profiling (análisis de rendimiento) del código PHP.
 En otras palabras, es una herramienta que permite ver qué hace tu programa internamente mientras se ejecuta, paso a paso, y medir su rendimiento.
 Funciones principales
@@ -622,13 +648,13 @@ sudo chown root:root /tmp/xdebug.log
 ```
 
 
-#### 1.1.6 Servidor web seguro (HTTPS)
-#### 1.1.7 DNS
+#### 1.1.7 Servidor web seguro (HTTPS)
+#### 1.1.8 DNS
 
 
-#### 1.1.8 SFTP
-#### 1.1.9 Apache Tomcat
-#### 1.1.10 LDAP
+#### 1.1.9 SFTP
+#### 1.1.10 Apache Tomcat
+#### 1.1.11 LDAP
 
 ### 1.2 Windows 11
 #### 1.2.1 **Configuración inicial**
