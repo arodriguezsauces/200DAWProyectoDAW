@@ -35,7 +35,9 @@
           - [Activarlo para cada virtualhost](#activarlo-para-cada-virtualhost)
           - [Activarlo para todos los virtualhost](#activarlo-para-todos-los-virtualhost)
           - [Comprobación de funcionamiento PHP-FPM](#comprobación-de-funcionamiento-php-fpm)
+      - [Configuración de PHP en entornos de desarrollo y de explotación](#configuración-de-php-en-entornos-de-desarrollo-y-de-explotación)
       - [1.1.4 MariaDB](#114-mariadb)
+      - [Modulos PHP](#modulos-php)
       - [1.1.5 XDebug](#115-xdebug)
       - [1.1.6 Servidor web seguro (HTTPS)](#116-servidor-web-seguro-https)
       - [1.1.7 DNS](#117-dns)
@@ -326,6 +328,57 @@ Listar los procesos asociados a PHP-PFM
 
 ![Resultado del comando ss -xlnp](images/ss1.png)
 
+#### Configuración de PHP en entornos de desarrollo y de explotación
+| General | Desarrollo | Producción |
+| ---- | :----- | :---- |
+| común | file-uploads = On <br> allow-url_fopen = On <br>memory_limit =  256M <br>upload_max_filesize = 100M <br>max_execution_time = 360 <br> date.timezone = Europe/Madrid  | file-uploads = On <br> allow-url_fopen = On <br>memory_limit =  256M <br>upload_max_filesize = 100M <br>max_execution_time = 360 <br> date.timezone = Europe/Madrid|
+|Errores | display_errors  = On <br> error_reporting = E_ALL<br> display_startup_errors = On <br>|   display_errors  = Off <br>error_reporting = E_ALL & ~E_NOTICE <br>display_startup_errors = Off <br>log_errors = On
+
+`file-uploads = On`
+
+Esta directiva permite la subida de archivos a través de formularios en aplicaciones web. Cuando está activada, los archivos pueden ser enviados al servidor.
+
+`allow_url_fopen = On`
+
+Permite que funciones de PHP, como file_get_contents(), abran archivos a través de URLs, además de los archivos locales. Desactiva está opción para mejorar la seguridad, evitar la posibilidad de abrir recursos externos.
+
+`memory_limit = 256M`
+
+Establece la cantidad máxima de memoria que un script de PHP puede usar
+
+`upload_max_filesize = 100M`
+
+Define el tamaño máximo permitido para los archivos que se pueden subir al servidor. En este caso, se permite un tamaño de hasta 100 megabytes por archivo.
+
+`max_execution_time = 360`
+
+Especifica el tiempo máximo en segundos que un script de PHP puede ejecutarse. Aquí se permite un tiempo de 360 segundos (6 minutos).
+
+`date.timezone = Europe/Madrid`
+
+Establece la zona horaria para las funciones de fecha y hora en PHP. En este caso, se establece la zona horaria a Madrid, lo que asegura que las fechas y horas devueltas por el servidor sean correctas para esa región.
+
+`display_errors = On`
+
+Esta directiva activa la visualización de errores y advertencias de PHP directamente en la pantalla. Es útil durante el desarrollo y la depuración, ya que te permite ver inmediatamente qué errores están ocurriendo en el código. Sin embargo, en un entorno de producción, se recomienda desactivarla (Off) para evitar mostrar información sensible a los usuarios.
+
+`error_reporting = E_ALL`
+
+Reporta todos los errores, lo que ayuda a identificar problemas en el código.
+
+`error_reporting = E_ALL & ~E_NOTICE`
+
+Reporta errores críticos pero puede omitir avisos que no afectan la ejecución
+
+`display_startup_errors = On`
+
+Esta directiva permite que se muestren los errores que ocurren durante el inicio del script de PHP, antes de que se ejecute el código. Esto incluye errores en la carga de extensiones y configuraciones iniciales. Al igual que display_errors, es útil en entornos de desarrollo pero debe ser desactivada en producción para mantener la seguridad.
+
+`log_errors = On`
+
+Registra errores en un archivo, permitiendo a los administradores revisarlos sin exponer detalles a los usuarios.
+
+
 #### 1.1.4 MariaDB
 > **MariaDB** es un **sistema de gestión de bases de datos relacional (RDBMS)**, muy similar a MySQL, permitiendo almacenar, organizar y acceder a información mediante el **lenguaje SQL (Structured Query Language)**.
 > Es una alternativa moderna y abierta a MySQL, muy usada en servidores web, aplicaciones empresariales y sistemas en la nube.
@@ -344,6 +397,27 @@ sudo apt install mariadb-server -y
 
 En el directorio `/etc/mysql/mariadb.conf.d`se encuentrar los ficheros de configuración del servidor.
 El archivo principal  de configuración `50-server.cnf` está definido el puerto , buscando la línea `port=3306`.
+
+**Configurar Acceso Remoto**
+
+Esto permitirá conectarse a la base de datos MariaDB desde otros equipos. Para habilitar el acceso remoto al servidor mariadb desde otros equipos, debes modificar el fichero de configuración.
+
+```bash
+sudo nano /etc/mysql/mariadb.conf.d/50-server.cnf
+```
+
+Localiza la línea `bind-address = 127.0.0.1` y cámbiala a :
+
+```bash
+bind-address = 0.0.0.0
+```
+Este cambio permite a mariadb acepte conexiones desde cualquier IP
+Reinicia el servidor MariaDB:
+
+```bash
+sudo systemctl restart mariadb
+```
+
 
 **Comandos útiles del servicio**
 
@@ -368,22 +442,26 @@ sudo ps -punta |grep mariadb
 tcp   LISTEN  0  80  127.0.0.1:3306   0.0.0.0:*   users:(("mariadbd",pid=1234,fd=10))
 
 ```
+
 2. Ver con consola de MariaDB
 
 Entrar al cliente:
+
 ```bash
 sudo mariadb
 ```
+
 Luego ejecuta:
+
 ```bash
 SHOW VARIABLES LIKE 'port';
 ```
+
 Nos muestra como resultado:
 
 | Variable_name | Value |
 | --------------- | ------ |
 | port          | 3306  |
-
 
 
 **Listar los procesos en ejecución** relacionados con el servidor mariadb
@@ -407,8 +485,81 @@ sudo mariadb
 Luego, cree un nuevo usuario con privilegios de root y acceso mediante contraseña.
 
 ```bash
+CREATE USER 'adminsql'@'%' IDENTIFIED BY 'password'
+GRANT ALL ON *.* TO 'adminsql'@'%' WITH GRANT OPTION;
+
+# o bien,
+
 GRANT ALL ON *.* TO 'adminsql'@'%' IDENTIFIED BY 'password' WITH GRANT OPTION;
 ```
+Listar todos los suarios y desde qué host pueden conectarse
+
+```bash
+SELECT User, Host FROM mysql.user;
+```
+
+Cómo conectarse de forma remota con el nuevo usuario
+
+```bash
+mariadb -u adminsql -p -h your_server_ip 
+```
+
+** Asegurar el servidor MariaDB
+Para ello ejecutamos un **script de seguridad** de tu servidor MariaDB configurando una contraseña root fuerte, eliminando usuarios anónimos y deshabilitar el inicio de sesión del root de forma remota, ...
+```bash
+sudo mysql_secure_installation
+```
+Sigue las indicaciones para establecer la contraseña de root, eliminar usuarios anónimos, deshabilitar el inicio de sesión remoto de root, eliminar bases de datos de prueba y recargar las tablas de privilegios.
+ continuación realizará una serie de cuestiones:
+
+* En el primer paso preguntará por la contraseña de `root` para MariaDB, pulsa la tecla `Enter` ya que no hay contraseña definida.
+* La siguiente, preguntará si quieres asignar una contraseña para el usuario “root”. Es recomendable usar una contraseña.
+* En el tercer paso preguntará si quieres eliminar `usuario anónimo`, aquí indica que `Sí` quieres borrar los datos.
+* Después preguntará si quieres desactivar el acceso remoto del usuario “root”, aquí indica que `Sí` quieres desactivar acceso remoto para usuario por seguridad.
+* De nuevo preguntará si quieres eliminar la base de datos `test`, aquí indica de nuevo que Sí quieres borrar las base de datos de prueba.
+* Por último, preguntará si quieres recargar privilegios, aquí indica que `Sí`.
+  
+#### Modulos PHP
+
+a) **php8.3-mysql**
+
+Este módulo `php8.3-mysql`es la extensión que permite a PHP conectarse y comunicarse con servidores de bases de datos MySQL o MariaDB.
+Sin este módulo, PHP no puede ejecutar consultas SQL, ni leer, ni escribir datos en su base de datos.
+Instalación del módulo php8.3-mysql y reiniciar el servicio php8.3-fpm
+
+```bash
+sudo apt install php8.3-mysql
+sudo systemctl restart php-fpm
+```
+
+| Módulo | Propósito | Estado actual |
+| --- | :---- | :----- |
+| php-mysql | Módulo antiguo (mezclaba mysql y mysqli) | Obsoleto desde PHP/
+| php-mysqli | Extensión mejorada orientada a MySQL/MariaDB | Activa y recomendada
+| php-pdo-mysql | Permite conexión vía PDO(interfaz orientada a objetos y más segunra) | Activa y recomendada
+
+Mostrar que extensión se han instalado
+```bash
+sudo php -m | grep mysql
+```
+![Mostrar los módulos php relacionados con mysql](images/php-m.png)
+
+b) **php8.3-intl**
+
+Es una extensión de internacionalización básica en la biblioteca ICU(International Components for Unicode)
+Permite que PHP muestre información adaptada a la región e idioma, sin que tengas que hacerlo manualmente.
+
+**Funciones principales php-intl**
+
+| Funcionalidad | Descripción | Ejemplo |
+| ----- | ----- | ----- |
+| Formateo de fechas y horas | Muestra las fechas según el idioma o país | 27 de octubre de 2025(es) / October 27,2025(en) |
+| Formateo de número | Muestra separaciones decimales y miles según región | 1.220,66 (es_ES), 1,2220.66 (en_US)|
+|monedas | Formatea precios automáticamente según el país | € 1.200,50 / $ 1,200,50|
+| Traducción y comparación de cadenas | Ordena y compara texto con reglas locales | útil para ordenar palabras con acentos |
+|Normalización Unicode | Asegura que caracteres acentuados o especiales se comparen correctamente | útil para búsquedas y validaciones |
+
+
 
 
 #### 1.1.5 XDebug
@@ -431,7 +582,7 @@ sudo php -v | grep xdebug
 Si no aparece, instalálo:
 
 ```bash
-sudo apte install php8.3-xdebug
+sudo apt install php8.3-xdebug
 ```
 
 Luego edita el fichero de configuración:
@@ -457,10 +608,19 @@ xdebug.discover_client_host=1
 Guarda y reinicia el servidor
 
 ```bash
-sudo systemctl restart apache 2
+sudo systemctl restart apache2
 # o si usas php-fpm
 sudo systemctl restart php8.3-fpm
 ```
+
+Dar permisos para escribir los log
+
+```bash
+sudo touch /tmp/xdebug.log
+sudo chmod 666 /tmp/xdebug.log
+sudo chown root:root /tmp/xdebug.log
+```
+
 
 #### 1.1.6 Servidor web seguro (HTTPS)
 #### 1.1.7 DNS
