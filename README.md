@@ -446,7 +446,6 @@ Reinicia el servidor MariaDB:
 sudo systemctl restart mariadb
 ```
 
-
 **Comandos útiles del servicio**
 
 | **Acción**                         | **Comando**                      | **Descripción**                                              |
@@ -463,9 +462,10 @@ sudo systemctl restart mariadb
 **Comprobación del puerto usado por el servidor Mariadb** es tcp/3306 por defecto.
 
 1. Usando comandos del sistema
+   El comando `ss`en Linux es una herramienta moderna y rapida para visualizar estadísticas de sockets y conexiones de red.
 
 ```bash
-sudo ps -punta |grep mariadb
+sudo ss -punta |grep mariadb
 
 tcp   LISTEN  0  80  127.0.0.1:3306   0.0.0.0:*   users:(("mariadbd",pid=1234,fd=10))
 
@@ -492,7 +492,7 @@ Nos muestra como resultado:
 | port          | 3306  |
 
 
-**Listar los procesos en ejecución** relacionados con el servidor mariadb
+**Listar los procesos en ejecución en el sistema** relacionados con el servidor mariadb
 
 ```bash
 sudo ps -aux |grep maria
@@ -520,6 +520,7 @@ GRANT ALL ON *.* TO 'adminsql'@'%' WITH GRANT OPTION;
 
 GRANT ALL ON *.* TO 'adminsql'@'%' IDENTIFIED BY 'password' WITH GRANT OPTION;
 ```
+
 Listar todos los suarios y desde qué host pueden conectarse
 
 ```bash
@@ -534,9 +535,11 @@ mariadb -u adminsql -p -h your_server_ip
 
 ** Asegurar el servidor MariaDB
 Para ello ejecutamos un **script de seguridad** de tu servidor MariaDB configurando una contraseña root fuerte, eliminando usuarios anónimos y deshabilitar el inicio de sesión del root de forma remota, ...
+
 ```bash
 sudo mysql_secure_installation
 ```
+
 Sigue las indicaciones para establecer la contraseña de root, eliminar usuarios anónimos, deshabilitar el inicio de sesión remoto de root, eliminar bases de datos de prueba y recargar las tablas de privilegios.
  continuación realizará una serie de cuestiones:
 
@@ -567,9 +570,11 @@ sudo systemctl restart php-fpm
 | php-pdo-mysql | Permite conexión vía PDO(interfaz orientada a objetos y más segunra) | Activa y recomendada
 
 Mostrar que extensión se han instalado
+
 ```bash
 sudo php -m | grep mysql
 ```
+
 ![Mostrar los módulos php relacionados con mysql](images/php-m.png)
 
 b) **php8.3-intl**
@@ -587,8 +592,7 @@ Permite que PHP muestre información adaptada a la región e idioma, sin que ten
 | Traducción y comparación de cadenas | Ordena y compara texto con reglas locales | útil para ordenar palabras con acentos |
 |Normalización Unicode | Asegura que caracteres acentuados o especiales se comparen correctamente | útil para búsquedas y validaciones |
 
-
-c) XDebug
+c) Modulo XDebug
 `Xdebug` es una extensión (módulo) de PHP diseñada para ayudar en la depuración (debugging) y profiling (análisis de rendimiento) del código PHP.
 En otras palabras, es una herramienta que permite ver qué hace tu programa internamente mientras se ejecuta, paso a paso, y medir su rendimiento.
 Funciones principales
