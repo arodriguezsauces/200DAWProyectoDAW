@@ -101,11 +101,14 @@ https://apache2.com/2.2.2.en/howto/htaccess.html
 
 ##### Directivas
 
+- AllowOverride
 - DirectoryIndex
 - Options Indexes
 - ErrorLog
 - CustomLog
 - ErrorDocument
+- Alias
+- Redirect
   
 
 ##### Virtual Hosts
@@ -122,8 +125,6 @@ FPM (FastCGI Process Manager) es un servidor de aplicaciones PHP que se encarga 
  
 ###### Instalación
 ----
-
-
 ```bash
 sudo apt install php8.3-fpm php8.3
 ```
@@ -269,6 +270,7 @@ sudo a2enconf php8.3-fpm
 ```
 
 ###### 1.1.4 Comprobación de funcionamiento PHP-FPM
+
 ---
 
 PHP-FPM puede escuchar por socket UNIX o TCP/IP (host:puerto). Revisar cada "pool" en Ubuntu en `/etc/php/8.3/fpm/pool.d/www.conf`
@@ -305,49 +307,49 @@ Listar los procesos asociados a PHP-PFM
 | común | file-uploads = On <br> allow-url_fopen = On <br>memory_limit =  256M <br>upload_max_filesize = 100M <br>max_execution_time = 360 <br> date.timezone = Europe/Madrid  | file-uploads = On <br> allow-url_fopen = On <br>memory_limit =  256M <br>upload_max_filesize = 100M <br>max_execution_time = 360 <br> date.timezone = Europe/Madrid|
 |Errores | display_errors  = On <br> error_reporting = E_ALL<br> display_startup_errors = On <br>|   display_errors  = Off <br>error_reporting = E_ALL & ~E_NOTICE <br>display_startup_errors = Off <br>log_errors = On
 
-`file-uploads = On`
-
-Esta directiva permite la subida de archivos a través de formularios en aplicaciones web. Cuando está activada, los archivos pueden ser enviados al servidor.
-
-`allow_url_fopen = On`
-
-Permite que funciones de PHP, como file_get_contents(), abran archivos a través de URLs, además de los archivos locales. Desactiva está opción para mejorar la seguridad, evitar la posibilidad de abrir recursos externos.
-
-`memory_limit = 256M`
-
-Establece la cantidad máxima de memoria que un script de PHP puede usar
-
-`upload_max_filesize = 100M`
-
-Define el tamaño máximo permitido para los archivos que se pueden subir al servidor. En este caso, se permite un tamaño de hasta 100 megabytes por archivo.
-
-`max_execution_time = 360`
-
-Especifica el tiempo máximo en segundos que un script de PHP puede ejecutarse. Aquí se permite un tiempo de 360 segundos (6 minutos).
-
-`date.timezone = Europe/Madrid`
-
-Establece la zona horaria para las funciones de fecha y hora en PHP. En este caso, se establece la zona horaria a Madrid, lo que asegura que las fechas y horas devueltas por el servidor sean correctas para esa región.
-
-`display_errors = On`
-
-Esta directiva activa la visualización de errores y advertencias de PHP directamente en la pantalla. Es útil durante el desarrollo y la depuración, ya que te permite ver inmediatamente qué errores están ocurriendo en el código. Sin embargo, en un entorno de producción, se recomienda desactivarla (Off) para evitar mostrar información sensible a los usuarios.
-
-`error_reporting = E_ALL`
-
-Reporta todos los errores, lo que ayuda a identificar problemas en el código.
-
-`error_reporting = E_ALL & ~E_NOTICE`
-
-Reporta errores críticos pero puede omitir avisos que no afectan la ejecución
-
-`display_startup_errors = On`
-
-Esta directiva permite que se muestren los errores que ocurren durante el inicio del script de PHP, antes de que se ejecute el código. Esto incluye errores en la carga de extensiones y configuraciones iniciales. Al igual que display_errors, es útil en entornos de desarrollo pero debe ser desactivada en producción para mantener la seguridad.
-
-`log_errors = On`
-
-Registra errores en un archivo, permitiendo a los administradores revisarlos sin exponer detalles a los usuarios.
+> `file-uploads = On`
+>
+>Esta directiva permite la subida de archivos a través de formularios en aplicaciones web. Cuando está activada, los archivos pueden ser enviados al servidor.
+> 
+> `allow_url_fopen = On`
+>
+>Permite que funciones de PHP, como file_get_contents(), abran archivos a través de URLs, además de los archivos locales. Desactiva está opción para mejorar la seguridad, evitar la posibilidad de abrir recursos externos.
+>
+>`memory_limit = 256M`
+>
+>Establece la cantidad máxima de memoria que un script de PHP puede usar
+>
+>`upload_max_filesize = 100M`
+>
+>Define el tamaño máximo permitido para los archivos que se pueden subir al servidor. En este caso, se permite un tamaño de hasta 100 megabytes por archivo.
+>
+>`max_execution_time = 360`
+>
+>Especifica el tiempo máximo en segundos que un script de PHP puede ejecutarse. Aquí se permite un tiempo de 360 segundos (6 minutos).
+>
+>`date.timezone = Europe/Madrid`
+>
+>Establece la zona horaria para las funciones de fecha y hora en PHP. En este caso, se establece la zona horaria a Madrid, lo que asegura que las fechas y horas devueltas por el servidor sean correctas para esa región.
+>
+>`display_errors = On`
+>
+>Esta directiva activa la visualización de errores y advertencias de PHP directamente en la pantalla. Es útil durante el desarrollo y la depuración, ya que te permite ver inmediatamente qué errores están ocurriendo en el código. Sin embargo, en un entorno de producción, se recomienda desactivarla (Off) para evitar mostrar información sensible a los usuarios.
+>
+>`error_reporting = E_ALL`
+>
+>Reporta todos los errores, lo que ayuda a identificar problemas en el código.
+>
+>`error_reporting = E_ALL & ~E_NOTICE`
+>
+>Reporta errores críticos pero puede omitir avisos que no afectan la ejecución
+>
+>`display_startup_errors = On`
+>
+>Esta directiva permite que se muestren los errores que ocurren durante el inicio del script de PHP, antes de que se ejecute el código. Esto incluye errores en la carga de extensiones y configuraciones iniciales. Al igual que display_errors, es útil en entornos de desarrollo pero debe ser desactivada en producción para mantener la seguridad.
+>
+>`log_errors = On`
+>
+>Registra errores en un archivo, permitiendo a los administradores revisarlos sin exponer detalles a los usuarios.
 
 
 #### 1.1.5 MariaDB
